@@ -1,92 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VJCET Navigation</title>
-
+    <title>Campus Blocks & Route Plan</title>
     <style>
-        body,
-        html {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Back to Black';
+            background-color: #f4f6f9;
         }
 
-        .hero {
-            background-image: url("vjcett.jpg");
-            /* Replace with your own campus image */
-            background-size: cover;
-            background-position: center;
-            width: 100%;
-            height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        header {
+            background-color: #2c3e50;
+            color: white;
             text-align: center;
-            color: white;
+            padding: 20px;
+            font-size: 24px;
         }
 
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .container {
+            padding: 30px;
+        }
+
+        .blocks {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .block-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .block-card img {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        h1 {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 0;
-            z-index: 1;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-        }
-
-        .btn-container {
-            margin-top: 30px;
-            z-index: 1;
-        }
-
-        .btn {
-            background: #007BFF;
-            color: white;
-            padding: 15px 35px;
-            font-size: 18px;
-            border: none;
+            height: 200px;
+            object-fit: cover;
             border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s ease-in-out;
         }
 
-        .btn:hover {
-            background: #0056b3;
+        .route-section {
+            margin-top: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .route-section h2 {
+            text-align: center;
+        }
+
+        .route-points {
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+
+        .navigation-box {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .navigation-box button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+
+        .navigation-box button:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="hero">
-        <div class="overlay"></div>
+    <header>
+        Campus Blocks & Route Navigation
+    </header>
 
-        <!-- You can change the heading if you want -->
-        <h1>VISWAJYOTHI COLLEGE OF ENGINEERING & TECHNOLOGY</h1>
+    <div class="container">
 
-        <div class="btn-container">
-            <button class="btn" onclick="goToNavigation()">Start Navigation</button>
+        <!-- BLOCK IMAGES SECTION -->
+        <div class="blocks">
+
+            <div class="block-card">
+                <h3>Block A</h3>
+                <img src="Blocka.jpeg" alt="Block A">
+            </div>
+
+            <div class="block-card">
+                <h3>Block B</h3>
+                <img src="Blockb.jpeg" alt="Block B">
+            </div>
+
+            <div class="block-card">
+                <h3>Block C</h3>
+                <img src="Blockc.jpeg" alt="Block C">
+            </div>
+
+            <div class="block-card">
+                <h3>Block D</h3>
+                <img src="Blockd.jpeg" alt="Block D">
+            </div>
+
         </div>
+
+        <!-- ROUTE POINTS SECTION -->
+        <div class="route-section">
+            <h2>Route Points</h2>
+
+            <div class="route-points">
+                1. Main Gate Entrance <br>
+                2. Security Checkpoint <br>
+                3. Administration Office <br>
+                4. Block A <br>
+                5. Block B <br>
+                6. Central Garden <br>
+                7. Block C <br>
+                8. Block D <br>
+                9. Parking Area <br>
+            </div>
+
+            <!-- NEXT PAGE BUTTON -->
+            <div class="navigation-box">
+                <button onclick="goNext()">Next Navigation Page →</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        function goToNavigation() {
-            window.location.href = "index.html"; /* Replace with your location input page */
+        function goNext() {
+            alert("Navigating to next page...");
+            // You can replace this with actual page link
+            window.location.href = "route.html";
         }
     </script>
 
