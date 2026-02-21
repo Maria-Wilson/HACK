@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VJCET Navigation System</title>
+    <style>
+        body {
+            font-family: 'Back to Black';
+            background: #f5efef;
+            text-align: center;
+            padding: 40px;
+        }
+
+
+
+        .box {
+            background: rgb(252, 249, 249);
+            padding: 25px;
+            width: 400px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>📍 VJCET Smart Navigation</h1>
+
+    <div class="box">
+
+        <h3>Your Current Location</h3>
+        <select id="currentBlock">
+            <option value="A">A Block</option>
+            <option value="B">B Block</option>
+            <option value="C">C Block</option>
+            <option value="D">D Block</option>
+        </select>
+
+        <input type="text" id="currentRoom" placeholder="Enter Current Room No (e.g., A203)">
+
+        <h3>Destination</h3>
+        <select id="destinationBlock">
+            <option value="A">A Block</option>
+            <option value="B">B Block</option>
+            <option value="C">C Block</option>
+            <option value="D">D Block</option>
+        </select>
+
+        <input type="text" id="destinationRoom" placeholder="Enter Destination Room No (e.g., D305)">
+
+        <button onclick="findRoute()">Find Route</button>
+
+    </div>
+
+    <script>
+        function findRoute() {
+
+            let currentBlock = document.getElementById("currentBlock").value;
+            let currentRoom = document.getElementById("currentRoom").value.toUpperCase();
+            let destinationBlock = document.getElementById("destinationBlock").value;
+            let destinationRoom = document.getElementById("destinationRoom").value.toUpperCase();
+
+            if (currentRoom === "" || destinationRoom === "") {
+                alert("Please enter both room numbers");
+                return;
+            }
+
+            // Redirect to new page
+            window.location.href =
+                "route.html?cb=" + currentBlock +
+                "&cr=" + currentRoom +
+                "&db=" + destinationBlock +
+                "&dr=" + destinationRoom;
+        }
+    </script>
+
+</body>
+
+</html>

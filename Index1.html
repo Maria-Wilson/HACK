@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VJCET Navigation</title>
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Back to Black';
+        }
+
+        .hero {
+            background-image: url("vjcett.jpg");
+            /* Replace with your own campus image */
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 0;
+            z-index: 1;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            z-index: 1;
+        }
+
+        .btn {
+            background: #007BFF;
+            color: white;
+            padding: 15px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hero">
+        <div class="overlay"></div>
+
+        <!-- You can change the heading if you want -->
+        <h1>VISWAJYOTHI COLLEGE OF ENGINEERING & TECHNOLOGY</h1>
+
+        <div class="btn-container">
+            <button class="btn" onclick="goToNavigation()">Start Navigation</button>
+        </div>
+    </div>
+
+    <script>
+        function goToNavigation() {
+            window.location.href = "index.html"; /* Replace with your location input page */
+        }
+    </script>
+
+</body>
+
+</html>

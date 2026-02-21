@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Full Campus Indoor Navigation</title>
+    <style>
+        body {
+            font-family: 'Back to Black';
+            text-align: center;
+        }
+
+        select,
+        button {
+            padding: 8px;
+            margin: 10px;
+        }
+
+        #map {
+            border: 2px solid black;
+            margin-top: 20px;
+            background: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>VJCET CAMPUS NAVIGATOR</h2>
+
+    <label>START:</label>
+    <select id="start"></select>
+
+    <label>DESTINATION</label>
+    <select id="end"></select>
+
+    <button onclick="calculateRoute()">Find Route</button>
+
+    <br>
+    <canvas id="map" width="2000" height="1300"></canvas>
+
+    <script>
+
+        // ================= ROUTE POINTS =================
+
+        const routePoints = {
+
+            // ===== A BLOCK =====
+            A_lobby: { x: 200, y: 1000 },
+            A_stairs_ground: { x: 200, y: 930 },
+            A_stairs_first: { x: 200, y: 780 },
+            A_stairs_second: { x: 200, y: 630 },
+            A_hardware_lab: { x: 120, y: 750 },
+            A_programming_lab: { x: 280, y: 750 },
+            A_network_lab: { x: 120, y: 600 },
+            A_multimedia_lab: { x: 280, y: 600 },
+
+            // ===== B BLOCK =====
+            B_stairs_ground: { x: 700, y: 930 },
+            B_stairs_first: { x: 700, y: 780 },
+            B_stairs_second: { x: 700, y: 630 },
+            B_hod_room: { x: 800, y: 1000 },
+            B_it_office: { x: 900, y: 1000 },
+            B_rd_lab: { x: 800, y: 750 },
+            B_design_lab: { x: 900, y: 750 },
+            B_sme_auditorium: { x: 800, y: 600 },
+            B_comm_lab: { x: 900, y: 600 },
+
+            // ===== C BLOCK =====
+            C_stairs_ground: { x: 1200, y: 930 },
+            C_stairs_first: { x: 1200, y: 780 },
+            C_stairs_second: { x: 1200, y: 630 },
+            C_electrical_lab: { x: 1100, y: 1000 },
+            C_workshop: { x: 1300, y: 1000 },
+            C_rd_lab: { x: 1100, y: 750 },
+            C_internet_lab: { x: 1300, y: 750 },
+            C_classroom: { x: 1100, y: 600 },
+            C_comm_lab: { x: 1300, y: 600 },
+
+            // ===== D BLOCK =====
+            D_stairs_ground_left: { x: 1700, y: 930 },
+            D_stairs_first: { x: 1700, y: 780 },
+            D_stairs_second: { x: 1700, y: 630 },
+            D_stairs_third: { x: 1700, y: 480 },
+
+            D_large_hall: { x: 1600, y: 1000 },
+            D_faculty_room_ground: { x: 1750, y: 1000 },
+            D_classroom_ground: { x: 1850, y: 1000 },
+            D_lab_ground: { x: 1950, y: 1000 },
+
+            D_classroom_first_1: { x: 1600, y: 750 },
+            D_faculty_room_first: { x: 1750, y: 750 },
+            D_lab_first: { x: 1850, y: 750 },
+            D_store_first: { x: 1950, y: 750 },
+
+            D_classroom_second_1: { x: 1600, y: 600 },
+            D_classroom_second_2: { x: 1750, y: 600 },
+            D_lab_second: { x: 1850, y: 600 },
+            D_seminar_hall: { x: 1950, y: 600 },
+
+            D_project_lab: { x: 1600, y: 450 },
+            D_classroom_third_1: { x: 1750, y: 450 },
+            D_lab_third: { x: 1850, y: 450 },
+            D_hod_room: { x: 1950, y: 450 },
+
+            // ===== BRIDGES =====
+            A_to_B_bridge: { x: 450, y: 930 },
+            B_to_C_bridge: { x: 950, y: 930 },
+            C_to_D_bridge: { x: 1450, y: 930 }
+        };
+
+
+        // ================= CONNECTIONS =================
+
+        const connections = {
+            // ===== A BLOCK =====
+            A_lobby: ["A_stairs_ground"],
+            A_stairs_ground: ["A_lobby", "A_stairs_first", "A_to_B_bridge"],
+            A_stairs_first: ["A_stairs_ground", "A_stairs_second", "A_hardware_lab", "A_programming_lab"],
+            A_stairs_second: ["A_stairs_first", "A_network_lab", "A_multimedia_lab"],
+            A_hardware_lab: ["A_stairs_first"],
+            A_programming_lab: ["A_stairs_first"],
+            A_network_lab: ["A_stairs_second"],
+            A_multimedia_lab: ["A_stairs_second"],
+
+            // ===== B BLOCK =====
+            B_stairs_ground: ["B_stairs_first", "B_hod_room", "B_it_office", "A_to_B_bridge", "B_to_C_bridge"],
+            B_stairs_first: ["B_stairs_ground", "B_stairs_second", "B_rd_lab", "B_design_lab"],
+            B_stairs_second: ["B_stairs_first", "B_sme_auditorium", "B_comm_lab"],
+            B_hod_room: ["B_stairs_ground"],
+            B_it_office: ["B_stairs_ground"],
+            B_rd_lab: ["B_stairs_first"],
+            B_design_lab: ["B_stairs_first"],
+            B_sme_auditorium: ["B_stairs_second"],
+            B_comm_lab: ["B_stairs_second"],
+
+            // ===== C BLOCK =====
+            C_stairs_ground: ["C_stairs_first", "C_electrical_lab", "C_workshop", "B_to_C_bridge", "C_to_D_bridge"],
+            C_stairs_first: ["C_stairs_ground", "C_stairs_second", "C_rd_lab", "C_internet_lab"],
+            C_stairs_second: ["C_stairs_first", "C_classroom", "C_comm_lab"],
+            C_electrical_lab: ["C_stairs_ground"],
+            C_workshop: ["C_stairs_ground"],
+            C_rd_lab: ["C_stairs_first"],
+            C_internet_lab: ["C_stairs_first"],
+            C_classroom: ["C_stairs_second"],
+            C_comm_lab: ["C_stairs_second"],
+
+            // ===== D BLOCK =====
+            D_stairs_ground_left: ["D_large_hall", "D_stairs_first", "C_to_D_bridge"],
+            D_large_hall: ["D_stairs_ground_left", "D_faculty_room_ground"],
+            D_faculty_room_ground: ["D_large_hall", "D_classroom_ground"],
+            D_classroom_ground: ["D_faculty_room_ground", "D_lab_ground"],
+            D_lab_ground: ["D_classroom_ground"],
+
+            D_stairs_first: ["D_stairs_ground_left", "D_stairs_second"],
+            D_stairs_second: ["D_stairs_first", "D_stairs_third"],
+            D_stairs_third: ["D_stairs_second"],
+
+            D_classroom_first_1: ["D_stairs_first"],
+            D_faculty_room_first: ["D_stairs_first"],
+            D_lab_first: ["D_stairs_first"],
+            D_store_first: ["D_stairs_first"],
+
+            D_classroom_second_1: ["D_stairs_second"],
+            D_classroom_second_2: ["D_stairs_second"],
+            D_lab_second: ["D_stairs_second"],
+            D_seminar_hall: ["D_stairs_second"],
+
+            D_project_lab: ["D_stairs_third"],
+            D_classroom_third_1: ["D_stairs_third"],
+            D_lab_third: ["D_stairs_third"],
+            D_hod_room: ["D_stairs_third"],
+
+            // ===== BRIDGES =====
+            A_to_B_bridge: ["A_stairs_ground", "B_stairs_ground"],
+            B_to_C_bridge: ["B_stairs_ground", "C_stairs_ground"],
+            C_to_D_bridge: ["C_stairs_ground", "D_stairs_ground_left"]
+        };
+
+
+        // ================= BFS ROUTE FINDING =================
+
+        function findRoute(start, end) {
+            let queue = [[start]];
+            let visited = new Set();
+
+            while (queue.length > 0) {
+                let path = queue.shift();
+                let node = path[path.length - 1];
+
+                if (node === end) return path;
+
+                if (!visited.has(node)) {
+                    visited.add(node);
+                    for (let neighbor of connections[node] || []) {
+                        queue.push([...path, neighbor]);
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        // ================= CANVAS DRAW =================
+
+        const canvas = document.getElementById("map");
+        const ctx = canvas.getContext("2d");
+
+        function drawPoints() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let key in routePoints) {
+                const point = routePoints[key];
+
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = "black";
+                ctx.fill();
+
+                ctx.fillText(key, point.x - 40, point.y - 10);
+            }
+        }
+
+        function drawRoute(path) {
+            drawPoints();
+
+            ctx.beginPath();
+            ctx.moveTo(routePoints[path[0]].x, routePoints[path[0]].y);
+
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(routePoints[path[i]].x, routePoints[path[i]].y);
+            }
+
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+        }
+
+
+        // ================= DROPDOWN SETUP =================
+
+        const startSelect = document.getElementById("start");
+        const endSelect = document.getElementById("end");
+
+        for (let key in routePoints) {
+            let option1 = document.createElement("option");
+            option1.value = key;
+            option1.text = key;
+            startSelect.appendChild(option1);
+
+            let option2 = document.createElement("option");
+            option2.value = key;
+            option2.text = key;
+            endSelect.appendChild(option2);
+        }
+
+        function calculateRoute() {
+            const start = startSelect.value;
+            const end = endSelect.value;
+
+            if (start === end) {
+                alert("Start and destination cannot be same!");
+                return;
+            }
+
+            const route = findRoute(start, end);
+
+            if (route) {
+                drawRoute(route);
+            } else {
+                alert("No route found!");
+            }
+        }
+
+        drawPoints();
+
+    </script>
+</body>
+
+</html>
